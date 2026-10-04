@@ -4,27 +4,27 @@
 class Cc370 < Formula
   desc "Host-native cross-toolchain for MVS 3.8j: C compiler, assembler, linker"
   homepage "https://github.com/mvslovers/cc370"
-  version "1.1.1"
+  version "1.2.0"
   license "GPL-2.0-or-later"
 
   on_macos do
     on_arm do
-      url "https://github.com/mvslovers/cc370/releases/download/v1.1.1/cc370-1.1.1-darwin-arm64.tar.gz"
-      sha256 "d4647b630d28efc2a9173ae5520fa8740636b4e2a080446a08d9b1fe8ec29cd6"
+      url "https://github.com/mvslovers/cc370/releases/download/v1.2.0/cc370-1.2.0-darwin-arm64.tar.gz"
+      sha256 "d964314548518d6df51a4c7037648e37f9f46ef1c02db5a9c5d06316b77cc376"
     end
     on_intel do
-      url "https://github.com/mvslovers/cc370/releases/download/v1.1.1/cc370-1.1.1-darwin-amd64.tar.gz"
-      sha256 "82a80794a17a6fcc62962b7877734e72260d3cfdc307e55cf597a340cf2d4126"
+      url "https://github.com/mvslovers/cc370/releases/download/v1.2.0/cc370-1.2.0-darwin-amd64.tar.gz"
+      sha256 "cb7484448fe52bf33cfa1d270101796eba7f94cf97ea9c290e75d4ded53ba70c"
     end
   end
   on_linux do
     on_arm do
-      url "https://github.com/mvslovers/cc370/releases/download/v1.1.1/cc370-1.1.1-linux-arm64.tar.gz"
-      sha256 "0a0bdad67f9610c9d9a7153f0769b3751b144453beaa000111dc9d8461895850"
+      url "https://github.com/mvslovers/cc370/releases/download/v1.2.0/cc370-1.2.0-linux-arm64.tar.gz"
+      sha256 "5b6d41a409a392ee9498030494734e1f449b15c2d0110daa2150d6b53b48ac88"
     end
     on_intel do
-      url "https://github.com/mvslovers/cc370/releases/download/v1.1.1/cc370-1.1.1-linux-amd64.tar.gz"
-      sha256 "6eeded7640bf177c3d4d8de0c7ebd4613480d2ecc2cf46f2efe4f62c8f111fe5"
+      url "https://github.com/mvslovers/cc370/releases/download/v1.2.0/cc370-1.2.0-linux-amd64.tar.gz"
+      sha256 "2b4e6338b56ce69a596730b273f839710dc4355015550d95921e18ff79fc30ab"
     end
   end
 
@@ -39,24 +39,16 @@ class Cc370 < Formula
     # directories from a keg -- without it no header and no -lc is found.
     (lib/"cc370"/version.to_s/".keepme").write ""
 
-    # cc370 searches its sysroot only in its own tree (cc370/), so libc370's
-    # files are linked in from its stable opt path: include/ whole, lib/ and
-    # macros/ file by file beside cc370's own libcc370rt.a and prologue
-    # macros. A file a later libc370 adds is seen after `brew reinstall cc370`
-    # (cc370#726 removes the need).
-    libc = Formula["mvslovers/tap/libc370"].opt_libexec
-    sysroot = prefix/"cc370"
-    sysroot.install_symlink libc/"include"
-    Dir[libc/"lib/*", libc/"macros/*"].each do |f|
-      dir = sysroot/File.basename(File.dirname(f))
-      dir.install_symlink f unless (dir/File.basename(f)).exist?
-    end
+    # cc370 also searches a second sysroot, cc370/libc370/{include,lib,macros}
+    # (cc370#726), so libc370 is linked in whole with one symlink to its
+    # stable opt path; a file a later libc370 adds is seen at once (#732).
+    (prefix/"cc370").install_symlink Formula["mvslovers/tap/libc370"].opt_libexec => "libc370"
   end
 
   test do
     # Host header paths in the environment would shadow libc370's headers.
     %w[CPATH C_INCLUDE_PATH CPLUS_INCLUDE_PATH OBJC_INCLUDE_PATH].each { |v| ENV.delete(v) }
-    assert_match "cc370 1.1.1 ", shell_output("#{bin}/cc370 --version")
+    assert_match "cc370 1.2.0 ", shell_output("#{bin}/cc370 --version")
     (testpath/"t.c").write <<~C
       #include <stdio.h>
       int main(int argc, char **argv) { printf("%lld\\n", argc * 1000000007LL / 3); return 0; }
