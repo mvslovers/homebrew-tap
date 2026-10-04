@@ -1,10 +1,10 @@
-# Bootstrapped by hand for 2.1.0; from the next release on, libc370's
-# release.yml renders this file -- edit its template in mvslovers/libc370.
+# Rendered by libc370's release.yml for every release -- edit the template,
+# sdk/homebrew/libc370.rb.in in mvslovers/libc370, not this file.
 class Libc370 < Formula
   desc "C library for MVS 3.8j: the cc370 target sysroot"
   homepage "https://github.com/mvslovers/libc370"
-  url "https://github.com/mvslovers/libc370/releases/download/v2.1.0/libc370-2.1.0-sysroot.tar.gz"
-  sha256 "17fedace4ef3e4ff70a468d81ae002e17fcc2be6c9e228be167b1dd1c0b2a1f4"
+  url "https://github.com/mvslovers/libc370/releases/download/v2.2.0/libc370-2.2.0-sysroot.tar.gz"
+  sha256 "8798e27d462cbd88ebaffac300dd4c851c5bacadb6bc10bbb18175677d42c1d6"
   license "BSD-2-Clause"
 
   def install
