@@ -4,27 +4,27 @@
 class Cc370 < Formula
   desc "Host-native cross-toolchain for MVS 3.8j: C compiler, assembler, linker"
   homepage "https://github.com/mvslovers/cc370"
-  version "1.3.0"
+  version "1.3.1"
   license "GPL-2.0-or-later"
 
   on_macos do
     on_arm do
-      url "https://github.com/mvslovers/cc370/releases/download/v1.3.0/cc370-1.3.0-darwin-arm64.tar.gz"
-      sha256 "7999667f3ce76f52f245f40cc7b7a9dd1180416aca45719e8fcedc64f840c4ef"
+      url "https://github.com/mvslovers/cc370/releases/download/v1.3.1/cc370-1.3.1-darwin-arm64.tar.gz"
+      sha256 "2e56738468fb7c0a88f350f037787b55a0520003ddcb868b296de55b946e8593"
     end
     on_intel do
-      url "https://github.com/mvslovers/cc370/releases/download/v1.3.0/cc370-1.3.0-darwin-amd64.tar.gz"
-      sha256 "0ad853a5e2b1a28857353e606667d622dc39dc750b80c9ce996af18862ecf647"
+      url "https://github.com/mvslovers/cc370/releases/download/v1.3.1/cc370-1.3.1-darwin-amd64.tar.gz"
+      sha256 "ced2a94b6514d6f4c3fefb09bb2b5386ef6ee481deca4c4f70f682e07f705678"
     end
   end
   on_linux do
     on_arm do
-      url "https://github.com/mvslovers/cc370/releases/download/v1.3.0/cc370-1.3.0-linux-arm64.tar.gz"
-      sha256 "90527e551f7c46b580d2af89fbc33f9e33203f3a02f2cdf0d5a2bc44ba5c0e9d"
+      url "https://github.com/mvslovers/cc370/releases/download/v1.3.1/cc370-1.3.1-linux-arm64.tar.gz"
+      sha256 "12a64216af379af96a5e6094382d423a80cb57c80e6f4d44eb897ae5ffcd7fa0"
     end
     on_intel do
-      url "https://github.com/mvslovers/cc370/releases/download/v1.3.0/cc370-1.3.0-linux-amd64.tar.gz"
-      sha256 "d53e30365b60d3df0756ef0dddd449e4730c9033beacc863bf64ab363bb962cd"
+      url "https://github.com/mvslovers/cc370/releases/download/v1.3.1/cc370-1.3.1-linux-amd64.tar.gz"
+      sha256 "182b15dcbc11ca048d8079b893552711482873d90016551fc8a452ebf9be470d"
     end
   end
 
@@ -48,7 +48,7 @@ class Cc370 < Formula
   test do
     # Host header paths in the environment would shadow libc370's headers.
     %w[CPATH C_INCLUDE_PATH CPLUS_INCLUDE_PATH OBJC_INCLUDE_PATH].each { |v| ENV.delete(v) }
-    assert_match "cc370 1.3.0 ", shell_output("#{bin}/cc370 --version")
+    assert_match "cc370 1.3.1 ", shell_output("#{bin}/cc370 --version")
     (testpath/"t.c").write <<~C
       #include <stdio.h>
       int main(int argc, char **argv) { printf("%lld\\n", argc * 1000000007LL / 3); return 0; }
