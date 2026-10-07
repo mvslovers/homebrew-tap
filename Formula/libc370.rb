@@ -3,8 +3,8 @@
 class Libc370 < Formula
   desc "C library for MVS 3.8j: the cc370 target sysroot"
   homepage "https://github.com/mvslovers/libc370"
-  url "https://github.com/mvslovers/libc370/releases/download/v2.6.0/libc370-2.6.0-sysroot.tar.gz"
-  sha256 "03396bd41132044043b7cebdc95ba8a0ecfbf7389290a0836d16ca34923ddd57"
+  url "https://github.com/mvslovers/libc370/releases/download/v2.6.1/libc370-2.6.1-sysroot.tar.gz"
+  sha256 "f29cfddb3b7cb2738aae204f9e60edf102a876f25c222ed3ae6c99118ae01421"
   license "BSD-2-Clause"
 
   def install
