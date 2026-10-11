@@ -4,31 +4,32 @@
 class Cc370 < Formula
   desc "Host-native cross-toolchain for MVS 3.8j: C compiler, assembler, linker"
   homepage "https://github.com/mvslovers/cc370"
-  version "1.5.0"
+  version "1.6.0"
   license "GPL-2.0-or-later"
 
   on_macos do
     on_arm do
-      url "https://github.com/mvslovers/cc370/releases/download/v1.5.0/cc370-1.5.0-darwin-arm64.tar.gz"
-      sha256 "9de273eae75ab2a5e86e5a1502bf51c310184d940ae0e8b9bfe5d264ec9ffc2b"
+      url "https://github.com/mvslovers/cc370/releases/download/v1.6.0/cc370-1.6.0-darwin-arm64.tar.gz"
+      sha256 "150c361f7a589f693ac5c65b06c705397f5b3c51bf587dc9597eaabc3a8d067a"
     end
     on_intel do
-      url "https://github.com/mvslovers/cc370/releases/download/v1.5.0/cc370-1.5.0-darwin-amd64.tar.gz"
-      sha256 "488e4f06295371734cfd12ab8a4d5672c4c4b8c540d29df45d5e7e0ac6c1b72b"
+      url "https://github.com/mvslovers/cc370/releases/download/v1.6.0/cc370-1.6.0-darwin-amd64.tar.gz"
+      sha256 "4f977e7cbacd59beadfb62e30bd331906598587db61a513f74718bd5d6d1cb17"
     end
   end
   on_linux do
     on_arm do
-      url "https://github.com/mvslovers/cc370/releases/download/v1.5.0/cc370-1.5.0-linux-arm64.tar.gz"
-      sha256 "5e75c9620b8373ff6ed2367d863a12db2f2ec387e81efe5ae5e92b4d473382c5"
+      url "https://github.com/mvslovers/cc370/releases/download/v1.6.0/cc370-1.6.0-linux-arm64.tar.gz"
+      sha256 "0f007cea20f1ebceabcdc44a8201cedac6ded8dd46cfd1e4c069114413ef0dfa"
     end
     on_intel do
-      url "https://github.com/mvslovers/cc370/releases/download/v1.5.0/cc370-1.5.0-linux-amd64.tar.gz"
-      sha256 "b337dd8af52f5f8c78fe183e942de2f5186d0f660f8395da265e1a72524d1b33"
+      url "https://github.com/mvslovers/cc370/releases/download/v1.6.0/cc370-1.6.0-linux-amd64.tar.gz"
+      sha256 "b9e1a47410808c19213ca7a5499189b0a7d032c096c9c79891bdfa299a6c9a3c"
     end
   end
 
   depends_on "mvslovers/tap/libc370"
+  depends_on "mvslovers/tap/maclib370"
 
   def install
     # The release tree is relocatable; the driver finds its pieces relative to
@@ -43,17 +44,30 @@ class Cc370 < Formula
     # (cc370#726), so libc370 is linked in whole with one symlink to its
     # stable opt path; a file a later libc370 adds is seen at once (#732).
     (prefix/"cc370").install_symlink Formula["mvslovers/tap/libc370"].opt_libexec => "libc370"
+    # SYS1.MACLIB and SYS1.AMODGEN of MVS 3.8j, where as370 searches them:
+    # <sysroot>/maclib370/macros, after libc370's macros.
+    (prefix/"cc370").install_symlink Formula["mvslovers/tap/maclib370"].opt_libexec => "maclib370"
   end
 
   test do
     # Host header paths in the environment would shadow libc370's headers.
     %w[CPATH C_INCLUDE_PATH CPLUS_INCLUDE_PATH OBJC_INCLUDE_PATH].each { |v| ENV.delete(v) }
-    assert_match "cc370 1.5.0 ", shell_output("#{bin}/cc370 --version")
+    assert_match "cc370 1.6.0 ", shell_output("#{bin}/cc370 --version")
     (testpath/"t.c").write <<~C
       #include <stdio.h>
       int main(int argc, char **argv) { printf("%lld\\n", argc * 1000000007LL / 3); return 0; }
     C
     system bin/"cc370", "-O1", "t.c", "-o", "t"
     assert_predicate testpath/"t", :exist?
+    # TIME is a SYS1.MACLIB member only maclib370 carries: found with no -I
+    # through the maclib370 link, rc 8 without it.
+    (testpath/"t.s").write <<~ASM
+      T        CSECT
+               TIME  DEC
+               BR    14
+               END   T
+    ASM
+    system bin/"as370", "t.s", "-o", "t.o"
+    assert_predicate testpath/"t.o", :exist?
   end
 end
