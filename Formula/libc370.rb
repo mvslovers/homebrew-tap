@@ -3,9 +3,13 @@
 class Libc370 < Formula
   desc "C library for MVS 3.8j: the cc370 target sysroot"
   homepage "https://github.com/mvslovers/libc370"
-  url "https://github.com/mvslovers/libc370/releases/download/v2.6.3/libc370-2.6.3-sysroot.tar.gz"
-  sha256 "e29c60705d338eda2e34a10899f77edfc27d80861799135ab360e72376323225"
+  url "https://github.com/mvslovers/libc370/releases/download/v2.7.0/libc370-2.7.0-sysroot.tar.gz"
+  sha256 "c48b7ef142d240e97a08dfac201146f3ed1502293a759aca679f83b8b79be8f7"
   license "BSD-2-Clause"
+
+  # SYS1.MACLIB and SYS1.AMODGEN, which libc370's own macros call (#490);
+  # as370 finds it once cc370's formula links it in as <sysroot>/maclib370
+  depends_on "mvslovers/tap/maclib370"
 
   def install
     # MVS target code: under libexec, which Homebrew does not link into
