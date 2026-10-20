@@ -3,8 +3,8 @@
 class Libc370 < Formula
   desc "C library for MVS 3.8j: the cc370 target sysroot"
   homepage "https://github.com/mvslovers/libc370"
-  url "https://github.com/mvslovers/libc370/releases/download/v2.23.0/libc370-2.23.0-sysroot.tar.gz"
-  sha256 "f2b2ec8fa22ce43b2bffa804b1ec1aa425f41a9ad15ef93b14872ad6dd0e7e0d"
+  url "https://github.com/mvslovers/libc370/releases/download/v2.24.0/libc370-2.24.0-sysroot.tar.gz"
+  sha256 "c746eee02ad13019af96bdb4ea26b00650951d1e1b4faa6a3e541d6565bdd69f"
   license "BSD-2-Clause"
 
   # SYS1.MACLIB and SYS1.AMODGEN, which libc370's own macros call (#490);
